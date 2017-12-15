@@ -1,0 +1,15 @@
+name: mk_static
+version: 1.0.0
+description: >
+  Eliminates a 404 get on the .css and .js files in absence of
+  internet by transforming js and link[rel=stylesheet] remote sources into
+  local ones.
+  This library is the dev dependency.
+author: Dennis Trachuk <dennis.trachuk@gmail.com>
+homepage: https://github.com/dentra/mk_static
+environment:
+  sdk: '>=1.13.0 <2.0.0'
+dependencies:
+  barback: "^0.15.2+7"
+  html: '>=0.12.0 <0.14.0'
+  http: any

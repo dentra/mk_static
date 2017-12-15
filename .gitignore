@@ -1,12 +1,17 @@
-# See https://www.dartlang.org/tools/private-files.html
-
-# Files and directories created by pub
+/.idea
+/.gradle
+/.pub
+/build
+/pub
+packages
 .packages
-.pub/
-build/
-# If you're building an application, you may want to check-in your pubspec.lock
-pubspec.lock
 
-# Directory created by dartdoc
-# If you don't generate documentation locally you can remove this line.
-doc/api/
+# Files created by dart2js.
+*.dart.js
+*.dart.precompiled.js
+*.js_
+*.js.deps
+*.js.map
+
+# Include when developing application packages.
+pubspec.lock
