@@ -12,4 +12,5 @@ environment:
 dependencies:
   barback: "^0.15.2+7"
   html: '>=0.12.0 <0.14.0'
-  http: any
+  http: '^0.11.3+16'
+  path: '^1.5.1'
