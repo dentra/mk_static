@@ -7,8 +7,8 @@ import 'processor.dart';
 
 /// Удаляем js-ссылки на внешние ресурсы.
 class ScriptProcessor extends DocumentProcessor {
-  ScriptProcessor(AssetId id, Transform transform, Document document)
-      : super(id, transform, document);
+  ScriptProcessor(AssetId id, Transform transform, Document document,
+    String userAgent) : super(id, transform, document, userAgent);
 
   @override
   Iterable<Element> query() => document.querySelectorAll('script');

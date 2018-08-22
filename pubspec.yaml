@@ -1,5 +1,5 @@
 name: mk_static
-version: 1.0.0
+version: 1.0.1
 description: >
   Eliminates a 404 get on the .css and .js files in absence of
   internet by transforming js and link[rel=stylesheet] remote sources into

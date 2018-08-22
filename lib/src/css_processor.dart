@@ -18,8 +18,8 @@ class CssResourceProcessor extends Processor<String, String> {
 
   Map<String, AssetId> _hrefMap = <String, AssetId>{};
 
-  CssResourceProcessor(AssetId id, Transform transform, String document)
-      : super(id, transform, document);
+  CssResourceProcessor(AssetId id, Transform transform, String document,
+    String userAgent) : super(id, transform, document, userAgent);
 
   static bool checkPattern(String text) {
     return text.contains(pattern1) || text.contains(pattern2);
@@ -41,11 +41,12 @@ class CssResourceProcessor extends Processor<String, String> {
     addMapping(href, hrefId);
     debug('Downloading css resource: $href');
     if (hrefId.extension == '.css') {
-      String data = await http.read(href);
-      data = await new CssResourceProcessor(hrefId, transform, data).run();
+      String data = await http.read(href, headers: headers);
+      data = await new CssResourceProcessor(
+        hrefId, transform, data, userAgent).run();
       transform.addOutput(new Asset.fromString(hrefId, data));
     } else {
-      Uint8List bytes = await http.readBytes(href);
+      Uint8List bytes = await http.readBytes(href, headers: headers);
       transform.addOutput(new Asset.fromBytes(hrefId, bytes));
     }
   }
@@ -71,8 +72,8 @@ class CssResourceProcessor extends Processor<String, String> {
 
 /// Удаляем css-ссылки на внешние ресурсы из содержимого `style` элементов.
 class InlineCssProcessor extends DocumentProcessor {
-  InlineCssProcessor(AssetId id, Transform transform, Document document)
-      : super(id, transform, document);
+  InlineCssProcessor(AssetId id, Transform transform, Document document,
+    String userAgent) : super(id, transform, document, userAgent);
 
   @override
   Iterable<Element> query() => document.querySelectorAll('style');
@@ -90,7 +91,8 @@ class InlineCssProcessor extends DocumentProcessor {
 
   @override
   Future<String> processExternal(Element e, AssetId assetId, String href) {
-    return new CssResourceProcessor(assetId, transform, e.text).run();
+    return new CssResourceProcessor(
+      assetId, transform, e.text, userAgent).run();
   }
 
   @override
@@ -101,8 +103,8 @@ class InlineCssProcessor extends DocumentProcessor {
 
 /// Удаляем css-ссылки на внешние ресурсы из тегов `link`.
 class LinkStylesheetProcessor extends DocumentProcessor {
-  LinkStylesheetProcessor(AssetId id, Transform transform, Document document)
-      : super(id, transform, document);
+  LinkStylesheetProcessor(AssetId id, Transform transform, Document document,
+    String userAgent) : super(id, transform, document, userAgent);
 
   @override
   Iterable<Element> query() => document.querySelectorAll('link[rel=stylesheet]');
@@ -129,7 +131,8 @@ class LinkStylesheetProcessor extends DocumentProcessor {
   @override
   Future<String> processExternal(Element e, AssetId assetId, String href) async {
     String cssData = await readExternalUrl(href);
-    return new CssResourceProcessor(assetId, transform, cssData).run();
+    return new CssResourceProcessor(
+      assetId, transform, cssData, userAgent).run();
   }
 
   @override

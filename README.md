@@ -31,6 +31,13 @@ transformers:
         - web/index.html
 ```
 
+And configure user-agent string:
+```yaml
+transformers:
+  - mk_static:
+      user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.113 Safari/537.36"
+```
+
 ## Bugs/requests
 
 Please report [bugs and feature requests][bugs].

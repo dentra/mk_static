@@ -15,8 +15,12 @@ abstract class Processor<T, E> {
   AssetId id;
   Transform transform;
   T document;
+  final Map<String, String> headers;
 
-  Processor(this.id, this.transform, this.document);
+  Processor(this.id, this.transform, this.document, String userAgent)
+    : headers = { 'User-Agent': userAgent ?? 'mk_static' };
+
+  String get userAgent => headers['User-Agent'];
 
   String checkMapping(String href) {
     AssetId id = _linksMap[href];
@@ -70,7 +74,6 @@ abstract class Processor<T, E> {
 
   Future<Null> processOne(E e);
 
-  @override
   Future<T> run() async {
     await Future.forEach(query().where(accept), processOne);
     return document;
@@ -78,21 +81,21 @@ abstract class Processor<T, E> {
 }
 
 abstract class DocumentProcessor extends Processor<Document, Element> {
-  DocumentProcessor(AssetId id, Transform transform, Document document)
-      : super(id, transform, document);
+  DocumentProcessor(AssetId id, Transform transform, Document document,
+    String userAgent) : super(id, transform, document, userAgent);
 
   bool isExternalUrl(String url) =>
-    url != null && url.startsWith('http') || url.startsWith('//');
+    url != null && (url.startsWith('http') || url.startsWith('//'));
 
   Future<String> readExternalUrl(String url) async {
     if (url.startsWith('//')) {
       try {
-        return await http.read("https:$url");
+        return await http.read("https:$url", headers: headers);
       } catch (err) {
-        return await http.read("http:$url");
+        return await http.read("http:$url", headers: headers);
       }
     }
-    return await http.read(url);
+    return await http.read(url, headers: headers);
   }
 
   String ensureProcess(Element e);

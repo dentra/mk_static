@@ -13,9 +13,11 @@ import 'src/js_processor.dart';
 class StaticTansformer extends Transformer {
   final BarbackSettings _settings;
   List<String> _entryPoints;
+  String _userAgent;
 
   StaticTansformer.asPlugin(this._settings) {
     _entryPoints = _readFileList(_settings.configuration['entry_points']);
+    _userAgent = _settings.configuration['user_agent'];
   }
 
   @override
@@ -40,9 +42,12 @@ class StaticTansformer extends Transformer {
 
     AssetId id = transform.primaryInput.id;
 
-    await new InlineCssProcessor(id, transform, document).run();
-    await new LinkStylesheetProcessor(id, transform, document).run();
-    await new ScriptProcessor(id, transform, document).run();
+    await new InlineCssProcessor(
+      id, transform, document, _userAgent).run();
+    await new LinkStylesheetProcessor(
+      id, transform, document, _userAgent).run();
+    await new ScriptProcessor(
+      id, transform, document, _userAgent).run();
 
     transform.addOutput(new Asset.fromString(id, document.outerHtml));
   }
